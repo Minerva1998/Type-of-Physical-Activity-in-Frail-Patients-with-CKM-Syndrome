@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physical Activity Type Predictor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #0073e6;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .content {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        input,
+        select,
+        button {
+            padding: 10px;
+            margin: 5px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        button {
+            background-color: #0073e6;
+            color: white;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #005bb5;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e0f7fa;
+            border-radius: 5px;
+        }
+
+        h2 {
+            color: #0073e6;
+        }
+
+        label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Predict Your Physical Activity Type</h1>
+    </header>
+    <div class="content">
+        <form id="predictor-form">
+            <label for="vocation">Vocation classification (0-1):</label>
+            <input type="number" id="vocation" name="vocation" min="0" max="1" step="0.01" required>
+
+            <label for="bscs-self-discipline">BSCS (Self-discipline) (0-1):</label>
+            <input type="number" id="bscs-self-discipline" name="bscs-self-discipline" min="0" max="1" step="0.01"
+                required>
+
+            <label for="tg">TG (mg/dL):</label>
+            <input type="number" id="tg" name="tg" required>
+
+            <label for="intention">Intention (0-1):</label>
+            <input type="number" id="intention" name="intention" min="0" max="1" step="0.01" required>
+
+            <label for="bscs-impulse">BSCS (Impulse control) (0-1):</label>
+            <input type="number" id="bscs-impulse" name="bscs-impulse" min="0" max="1" step="0.01" required>
+
+            <label for="psss">PSSS (0-1):</label>
+            <input type="number" id="psss" name="psss" min="0" max="1" step="0.01" required>
+
+            <button type="submit">Predict Activity Type</button>
+        </form>
+
+        <div id="result" class="result" style="display: none;">
+            <h3>Prediction Result:</h3>
+            <p id="activity-type"></p>
+        </div>
+    </div>
+
+    <script>
+        // Function to handle the form submission
+        document.getElementById('predictor-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            // Get input values
+            const vocation = parseFloat(document.getElementById('vocation').value);
+            const bscsSelfDiscipline = parseFloat(document.getElementById('bscs-self-discipline').value);
+            const tg = parseFloat(document.getElementById('tg').value);
+            const intention = parseFloat(document.getElementById('intention').value);
+            const bscsImpulse = parseFloat(document.getElementById('bscs-impulse').value);
+            const psss = parseFloat(document.getElementById('psss').value);
+
+            // Example formula for prediction based on input values (simplified)
+            let scoreActive = vocation * 0.1 + bscsSelfDiscipline * 0.2 + tg * 0.3 + intention * 0.2 + bscsImpulse * 0.1 + psss * 0.1;
+            let scoreBalanced = vocation * 0.15 + bscsSelfDiscipline * 0.3 + tg * 0.2 + intention * 0.2 + bscsImpulse * 0.1 + psss * 0.05;
+            let scoreSedentary = vocation * 0.2 + bscsSelfDiscipline * 0.15 + tg * 0.2 + intention * 0.1 + bscsImpulse * 0.15 + psss * 0.2;
+
+            // Determine which activity type has the highest score
+            let activityType = 'Unknown';
+            if (scoreActive > scoreBalanced && scoreActive > scoreSedentary) {
+                activityType = 'Active Sedentary Type';
+            } else if (scoreBalanced > scoreActive && scoreBalanced > scoreSedentary) {
+                activityType = 'Balanced Activity Type';
+            } else {
+                activityType = 'Sedentary Static Type';
+            }
+
+            // Display the result
+            document.getElementById('activity-type').textContent = `Your predicted activity type is: ${activityType}`;
+            document.getElementById('result').style.display = 'block';
+        });
+    </script>
+</body>
+
+</html>
